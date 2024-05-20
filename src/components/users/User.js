@@ -59,8 +59,7 @@ const User = () => {
       ) : (
         <i className="fas fa-times-circle text-danger" />
       )}
-      <div className="cardgrid-2">
-        README.md 2024-05-17 18 / 22
+      <div className="card grid-2">
         <div className="all-center">
           <img
             src={avatar_url}
