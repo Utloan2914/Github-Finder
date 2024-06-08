@@ -1,33 +1,35 @@
-import axios from "axios";
-import React, { useState } from "react";
-import Users from "./Users";
+import React, { useState, useEffect } from 'react';
+import { useLocation, useHistory } from 'react-router-dom';
+import Users from './Users';
+import { searchUsers } from '../../api';
 
 const Search = () => {
-  const [text, setText] = useState("");
+  const [text, setText] = useState('');
   const [users, setUsers] = useState([]);
+  const location = useLocation();
+  const history = useHistory();
 
-  const searchUsers = async (text) => {
-    try {
-      const response = await axios.get(
-        `https://api.github.com/search/users?q=${text}`
-      );
-      setUsers(response.data.items);
-    } catch (error) {
-      console.error("Error fetching data:", error);
+  useEffect(() => {
+    const query = new URLSearchParams(location.search).get('q');
+    if (query) {
+      setText(query);
+      searchUsers(query).then(setUsers);
     }
-  };
+  }, [location.search]);
 
-  const clearUsers = () => {
-    setUsers([]);
-  };
-
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
-    if (text === "") {
-      alert("Please enter something");
+    if (text === '') {
+      alert('Please enter something');
     } else {
-      searchUsers(text);
-      setText("");
+      history.push(`/?q=${text}`);
+      try {
+        const data = await searchUsers(text);
+        setUsers(data);
+        setText('');
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     }
   };
 
@@ -49,9 +51,8 @@ const Search = () => {
           className="btn btn-success btn-block"
         />
       </form>
-      {/* Adding Clear button */}
       {users.length > 0 && (
-        <button className="btn btn-danger btn-block" onClick={clearUsers}>
+        <button className="btn btn-danger btn-block" onClick={() => setUsers([])}>
           Clear
         </button>
       )}

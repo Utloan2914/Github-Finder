@@ -1,38 +1,27 @@
-import axios from "axios";
-import React, { Fragment, useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom/cjs/react-router-dom.min";
-import Repos from "../repos/Repos";
+import React, { Fragment, useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
+import Repos from '../repos/Repos';
+import { getUser, getUserRepos } from '../../api';
+
 const User = () => {
   const { id } = useParams();
   const [user, setUser] = useState({});
   const [repos, setRepos] = useState([]);
-  const getUser = async (username) => {
-    try {
-      const response = await axios.get(
-        `https://api.github.com/users/${username}`,
-      );
-      const data = response.data;
-      setUser(data);
-    } catch (error) {
-      console.error("Error fetching data:", error.message);
-    }
-  };
-  const getUserRepos = async (id) => {
-    try {
-      const response = await axios.get(
-        `https://api.github.com/users/${id}/repos`
-      );
-      const data = response.data;
-      setRepos(data);
-    } catch (error) {
-      console.error("Error fetching repos:", error.message);
-    }
-  };
-  
+
   useEffect(() => {
-    getUser(id);
-    getUserRepos(id);
+    const fetchData = async () => {
+      try {
+        const userData = await getUser(id);
+        setUser(userData);
+        const userRepos = await getUserRepos(id);
+        setRepos(userRepos);
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
+    };
+    fetchData();
   }, [id]);
+
   const {
     name,
     avatar_url,
@@ -48,13 +37,13 @@ const User = () => {
     public_gists,
     hireable,
   } = user;
+
   return (
     <Fragment>
       <Link to="/" className="btn btn-light">
         Back to Search
       </Link>
-      Hireable:{" "}
-      {hireable ? (
+      Hireable: {hireable ? (
         <i className="fas fa-check text-success" />
       ) : (
         <i className="fas fa-times-circle text-danger" />
@@ -65,7 +54,7 @@ const User = () => {
             src={avatar_url}
             alt={name}
             className="round-img"
-            style={{ width: "150px" }}
+            style={{ width: '150px' }}
           />
           <h1>{name}</h1>
           <p>{location}</p>
@@ -89,26 +78,21 @@ const User = () => {
             <li>
               {login && (
                 <Fragment>
-                  <strong>Username: </strong>
-                  {login}
+                  <strong>Username: </strong> {login}
                 </Fragment>
               )}
             </li>
             <li>
               {company && (
                 <Fragment>
-                  <strong>Company: </strong>
-                  {company}
+                  <strong>Company: </strong> {company}
                 </Fragment>
               )}
             </li>
             <li>
               {blog && (
                 <Fragment>
-                  <strong>Website: </strong>
-                  <a href={blog} target="_blank" rel="noopener noreferrer">
-                    {blog}
-                  </a>
+                  <strong>Website: </strong> <a href={blog}>{blog}</a>
                 </Fragment>
               )}
             </li>
@@ -118,11 +102,12 @@ const User = () => {
       <div className="card text-center">
         <div className="badge badge-primary">Followers: {followers}</div>
         <div className="badge badge-success">Following: {following}</div>
-        <div className="badge badge-light">Repository: {public_repos}</div>
-        <div className="badge badge-dark">Gist: {public_gists}</div>
+        <div className="badge badge-light">Public Repos: {public_repos}</div>
+        <div className="badge badge-dark">Public Gists: {public_gists}</div>
       </div>
       <Repos repos={repos} />
     </Fragment>
   );
 };
+
 export default User;

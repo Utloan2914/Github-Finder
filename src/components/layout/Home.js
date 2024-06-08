@@ -1,9 +1,9 @@
 import React from "react";
-import { Route, Switch } from "react-router-dom/cjs/react-router-dom.min";
-import About from "../pages/About";
-import NotFound from "../pages/NotFound";
-import Search from "../users/Search";
-import User from "../users/User";
+import { Route, Switch } from "react-router-dom";
+import About from "../pages/About"; 
+import NotFound from "../pages/NotFound"; 
+import Search from "../users/Search"; 
+import User from "../users/User"; 
 
 const Home = () => {
   return (

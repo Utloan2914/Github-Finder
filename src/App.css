@@ -433,3 +433,22 @@ table th {
   left: 0;
   width: 100%;
 }
+/* Add dark mode styles */
+.App.dark-mode {
+  background-color: #181818;
+  color: #fff;
+}
+
+.App.dark-mode .navbar {
+  background-color: #333;
+}
+
+.App.dark-mode .card {
+  background-color: #242424;
+  color: #fff;
+}
+
+.App.dark-mode .btn {
+  background-color: var(--danger-color);
+  color: #fff;
+}

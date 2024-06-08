@@ -1,17 +1,23 @@
-import React from "react";
-import { BrowserRouter as Router } from "react-router-dom";
-import "./App.css";
-import Home from "./components/layout/Home";
-import Navbar from "./components/layout/Navbar";
+import React, { useState } from 'react';
+import { BrowserRouter as Router } from 'react-router-dom';
+import './App.css';
+import Navbar from './components/layout/Navbar';
+import Home from './components/layout/Home'; 
 
 const App = () => {
+  const [darkMode, setDarkMode] = useState(false);
+
+  const toggleDarkMode = () => {
+    setDarkMode(!darkMode);
+  };
+
   return (
-    <div className="App">
-      <Router>
-        <Navbar />
+    <Router>
+      <div className={darkMode ? 'App dark-mode' : 'App'}>
+        <Navbar toggleDarkMode={toggleDarkMode} />
         <Home />
-      </Router>
-    </div>
+      </div>
+    </Router>
   );
 };
 
